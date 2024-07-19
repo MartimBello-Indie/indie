@@ -1,0 +1,22 @@
+{
+    "[gemfile]": {
+        "editor.defaultFormatter": "misogi.ruby-rubocop",
+        "editor.formatOnSave": false
+    },
+    "[ruby]": {
+        "editor.defaultFormatter": "misogi.ruby-rubocop",
+        "editor.formatOnSave": false
+    },
+    "editor.formatOnSave": false,
+    "editor.rulers": [
+        100
+    ],
+    "ruby.rubocop.executePath": "/Users/indiecampers/.rbenv/shims/",
+    "rubyLsp.bundleGemfile": "/Users/indiecampers/repos/ruby-lsp/Gemfile",
+    "rubyLsp.enabledFeatures": {
+        "diagnostics": false
+    },
+    "rubyLsp.rubyVersionManager": {
+        "identifier": "rbenv"
+    }
+}
