@@ -16,7 +16,7 @@ class RvController < ApplicationController
 
   def create_rv
     result = facade.create_rv(
-      RvDomain::DTOS::CreateBookingDto.new(
+      RvDomain::DTOS::CreateRvDto.new(
         make: create_rv_params[:make],
         model: create_rv_params[:model],
         year: create_rv_params[:year],

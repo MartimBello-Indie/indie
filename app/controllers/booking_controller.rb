@@ -3,35 +3,25 @@ class BookingController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def show_all_bookings
-    @bookings = Booking.all
-    render json: @bookings, status: :ok
+    result = facade.find_all_bookings
+    render_result(result)
   end
 
   def show_booking
-    @booking = Booking.find(show_booking_params[:id])
-    render json: @booking, status: :ok
+    result = facade.find_booking(id: show_booking_params[:id])
+    render_result(result)
   end
-  
+
   def create_booking
-    @booking = Booking.new(create_booking_params)
-
-    if @booking.save
-      render json: @booking, status: :ok
-    else
-      render {message: "Something went wrong"}, status: :unprocessed_entity
-    end
-  end
-
-
-  def update_booking
-    @booking = Booking.find(update_booking_params)
-
-    @booking.update(update_booking_params)
-    if @booking.save
-      render json: @booking, status: :ok
-    else
-      render {:message => "Something went wrong"}, status: :unprocessed_entity
-    end 
+    result = facade.create_booking(
+      BookingDomain::DTOS::CreateBookingDto.new(
+        rv_id: create_booking_params[:rv_id],
+        user_id: create_booking_params[:user_id],
+        start_date: create_booking_params[:start_date],
+        end_date: create_booking_params[:end_date]
+      )
+    )
+    render_result(result)
   end
 
   private 
@@ -46,5 +36,20 @@ class BookingController < ApplicationController
 
   def update_booking_params
     params.permit(:id, :rv_id, :user_id, :start_date, :end_date, :total_price)
+  end
+
+  def facade
+    ::BookingDomain::Facade.new
+  end
+
+  def render_result(result)
+    render json: build_json(result.data, result.message), status: result.status
+  end
+
+  def build_json(data, message)
+    {
+      data: data || {},
+      message: message.to_s
+    }
   end
 end

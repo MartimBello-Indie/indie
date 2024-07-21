@@ -1,6 +1,6 @@
-module BookingDomain
+module UserDomain
   module Exceptions
-    class NotFoundException < PartnerException
+    class NotFoundException < UserException
       def initialize(message)
         super(message, :not_found)
       end

@@ -1,6 +1,6 @@
 module BookingDomain
   module Commands
-    class FindBooking
+    class FindBooking < Command
       def execute(id:)
         Booking.find(id)
  

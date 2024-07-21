@@ -4,29 +4,20 @@ class UserController < ApplicationController
   include BCrypt
   skip_before_action :verify_authenticity_token
 
-
-  def show_all_users
-    @users = User.all
-    render json: @users
-  end
-
   def show_user
-    @user = User.find(show_user_params[:id])
-    render json: @user
+    result = facade.find_user(id: show_user_params[:id])
+    render_result(result)
   end
 
   def create_user
-    secure_params = {
-                      name: create_user_params[:name], 
-                      email: create_user_params[:email], 
-                      password: Password.create(create_user_params[:password])
-                    }
-    @user = User.new(secure_params)
-    if @user.save
-      render json: @user, status: :ok
-    else
-      render json: "Error creating user", status: :unprocessed_entity
-    end
+    result = facade.create_user(
+      UserDomain::DTOS::CreateUserDto.new(
+        name: create_user_params[:name],
+        email: create_user_params[:email],
+        password: create_user_params[:password]
+      )
+    )
+    render_result(result)
   end
 
   def update_user
@@ -37,7 +28,7 @@ class UserController < ApplicationController
     if @user.save
       render json: @user, status: :ok
     else
-      render json: "Error updating user", status: :unprocessed_entity
+      render json: 'Error updating user', status: :unprocessed_entity
     end
   end
 
@@ -53,5 +44,20 @@ class UserController < ApplicationController
 
   def update_user_params
     params.permit(:id, :name, :email, :password)
+  end
+
+  def facade
+    ::UserDomain::Facade.new
+  end
+
+  def render_result(result)
+    render json: build_json(result.data, result.message), status: result.status
+  end
+
+  def build_json(data, message)
+    {
+      data: data || {},
+      message: message.to_s
+    }
   end
 end
