@@ -33,6 +33,12 @@ module BookingDomain
           raise Exceptions::BadRequestException.new("Request is missing parameters.")
         end
 
+        if not @dto.status.nil?
+          if not ["active", "completed", "cancelled"].include? @dto.status
+            raise Exceptions::BadRequestException.new("Status #{@dto.status} is invalid")
+          end
+        end
+
         @start_date = @parse_date_service.parse!(@dto.start_date)
         @end_date = @parse_date_service.parse!(@dto.end_date)
 
@@ -44,7 +50,6 @@ module BookingDomain
 
         total_price = (@end_date - @start_date).to_i * rv_data[:daily_rate]
 
-        puts total_price
         @params.merge!({total_price: total_price})
 
       rescue RvDomain::Exceptions::RvNotFoundException

@@ -21,6 +21,13 @@ module BookingDomain
         build_success_result(data: data)
       end
     end
+    
+    def update_booking(params:)
+      validate_and_handle_exceptions do
+        data = Commands::UpdateBooking.execute(params: params)
+        build_success_result(data: data)
+      end
+    end
 
     private
 

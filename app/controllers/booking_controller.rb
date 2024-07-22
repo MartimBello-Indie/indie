@@ -18,9 +18,15 @@ class BookingController < ApplicationController
         rv_id: create_booking_params[:rv_id],
         user_id: create_booking_params[:user_id],
         start_date: create_booking_params[:start_date],
-        end_date: create_booking_params[:end_date]
+        end_date: create_booking_params[:end_date],
+        status: create_booking_params[:status]
       )
     )
+    render_result(result)
+  end
+
+  def update_booking
+    result = facade.update_booking(params: update_booking_params)
     render_result(result)
   end
 
@@ -31,11 +37,11 @@ class BookingController < ApplicationController
   end
 
   def create_booking_params
-    params.permit(:rv_id, :user_id, :start_date, :end_date, :total_price)
+    params.permit(:rv_id, :user_id, :start_date, :end_date, :total_price, :status)
   end
 
   def update_booking_params
-    params.permit(:id, :rv_id, :user_id, :start_date, :end_date, :total_price)
+    params.permit(:id, :rv_id, :end_date, :status)
   end
 
   def facade
